@@ -1,0 +1,26 @@
+{
+  "name": "scrape-ifunny",
+  "version": "1.0.0",
+  "description": "cli scraper for ifunny accounts",
+  "main": "index.js",
+  "license": "MIT",
+  "engines": {
+    "node": ">=8"
+  },
+  "scripts": {
+    "start": "node index.js",
+    "clean": "rimraf ./cache ./memes ./meme_database.json"
+  },
+  "dependencies": {
+    "artoo-js": "^0.4.0",
+    "chalk": "^2.2.0",
+    "commander": "^2.12.2",
+    "moment": "^2.19.1",
+    "request": "^2.83.0",
+    "rxjs": "^5.5.1",
+    "standard": "^10.0.3"
+  },
+  "devDependencies": {
+    "rimraf": "^2.6.2"
+  }
+}
