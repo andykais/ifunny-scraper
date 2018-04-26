@@ -19,13 +19,7 @@ class Database {
     Object.assign(this, {
       config,
       database,
-      entriesMap,
-      stats: {
-        video: 0,
-        image: 0,
-        cached: 0,
-        page: 0
-      }
+      entriesMap
     })
   }
   async persist() {
@@ -90,5 +84,7 @@ module.exports = async config => {
   const databaseObj = await read(config.paths.database)
     .then(JSON.parse)
     .catch(() => fallbackDatabase)
+  // count how many downloads already finised for stats
+  logger.stats.total = databaseObj.entries.filter(e => e.downloaded).length
   return new Database(config, databaseObj)
 }

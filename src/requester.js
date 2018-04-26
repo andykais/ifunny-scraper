@@ -12,12 +12,6 @@ const sanitizeNameForFilesystem = s => s.replace(/[^a-z0-9]/gi, '_')
 
 const logger = getLoggerSingleton()
 
-const stats = {
-  page: 0,
-  video: 0,
-  gif: 0,
-  image: 0
-}
 const { inspect } = require('util')
 
 const requestPromise = (options = {}) =>
@@ -36,7 +30,7 @@ const requestPromise = (options = {}) =>
 // request promise with the ability to cache a file
 const cachedRequestPromise = config => async options => {
   const { filename, index, stream, html = true, ...requestOptions } = options
-  const destFilename = filename || html
+  const destFilename = filename || `${config.paths.cache}/${sanitizeNameForFilesystem(options.url.toString())}`
 
   if (stream) {
     await new Promise((resolve, reject) => {

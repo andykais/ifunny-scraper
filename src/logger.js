@@ -5,9 +5,11 @@ const [read, write] = [readFile, writeFile].map(f => promisify(f))
 
 class Logger {
   _printProgress() {
-    const logMessage = `downloaded ${this.stats.total} memes (${this.stats.inProgress.image} images & ${
-      this.stats.inProgress.video
-    } videos queued) while ${this.stats.inProgress.page} pages are downloading.`
+    const logMessage = `downloaded ${this.stats.total} memes (${
+      this.stats.inProgress.image
+    } images & ${this.stats.inProgress.video} videos queued) while ${
+      this.stats.inProgress.page
+    } pages are downloading.`
     if (this.showDebug) this.debug(logMessage)
     else process.stdout.write(`\r${logMessage}`)
   }
