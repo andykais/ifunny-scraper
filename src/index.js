@@ -112,8 +112,9 @@ const parseMetaData = async ({ database, requester }) => {
   const memeCountStr = index$('.metaline__count')
     .scrapeOne()
     .replace(' memes', '')
-    .replace('.', '')
-    .replace(/K$/, '000')
+    .replace(/K/, '000') // for making 8K become 8000
+    .replace(/\.(\d)0/, '$1') // for making 8.1K become 8100
+
   const memeCount = parseInt(memeCountStr)
   database.setTotalApproximation(memeCount)
 }
