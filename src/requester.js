@@ -19,7 +19,7 @@ const requestPromise = (options = {}) =>
     request(options, (error, { statusCode } = {}, body) => {
       if (error) {
         reject(error)
-      } else if (![200].includes(statusCode)) {
+      } else if (statusCode !== 200) {
         reject(new Error(`status code: ${statusCode} at ${options.url}`))
       } else {
         resolve(body)

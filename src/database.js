@@ -21,6 +21,8 @@ class Database {
       database,
       entriesMap
     })
+    // count how many memes have previously been downloaded (if any or print 0)
+    logger.stats.total = database.entries.reduce((acc, { downloaded }) => acc += downloaded, 0)
   }
   async persist() {
     await write(this.config.paths.database, JSON.stringify(this.database, null, 2))
@@ -44,6 +46,11 @@ class Database {
   setTotalApproximation(memeCount) {
     this.database.counts.approximateTotal = memeCount
     this.database.counts.smallestIndex = memeCount
+    const approximately = memeCount >= 1000 ? 'approximately ' : ''
+    logger.info(`${this.config.username} has ${approximately}${memeCount.toLocaleString()} memes`)
+  }
+  getTotalApproximation() {
+    return this.database.counts.approximateTotal
   }
 
   get(pageUri) {

@@ -109,11 +109,13 @@ const parseMetaData = async ({ database, requester }) => {
   const html = await requester({ url })
   // console.log(html)
   const index$ = cheerio.load(html)
-  const memeCountStr = index$('.metaline__count')
-    .scrapeOne()
-    .replace(' memes', '')
-    .replace(/K/, '000') // for making 8K become 8000
-    .replace(/\.(\d)0/, '$1') // for making 8.1K become 8100
+  const memeCountSpan = index$('.metaline__count').scrapeOne()
+  const memeCountStr = memeCountSpan
+    ? memeCountSpan
+        .replace(' memes', '')
+        .replace(/K/, '000') // for making 8K become 8000
+        .replace(/\.(\d)0/, (_, n) => parseInt(n) + 1) // for making 8.1K become 8200 (cant be certain ifunny doesnt round down)
+    : 0
 
   const memeCount = parseInt(memeCountStr)
   database.setTotalApproximation(memeCount)
@@ -123,9 +125,12 @@ const parseMetaData = async ({ database, requester }) => {
 const scrape = async ({ database, queuer, requester }) => {
   logger.info(`Saving files to ${database.config.paths.basedir}`)
 
-  await parseMetaData({ database, queuer, requester })
   logger.info('visiting memer profile...')
+  await parseMetaData({ database, queuer, requester })
+  // an empty account has no need to be scraped
+  if (database.getTotalApproximation() === 0) return
 
+  // batch number & id are part of the html payload that tells ifunny which payload to grab next
   let batchNumber = 0
   let nextBatchID
   do {
@@ -135,9 +140,9 @@ const scrape = async ({ database, queuer, requester }) => {
   } while (nextBatchID)
 
   logger.debug('done crawling for meme pages.')
-
   await queuer.toPromise()
   await database.persist()
+  logger.info('\ndone downloading memes.')
 }
 
 const init = async config => {
@@ -154,7 +159,6 @@ const init = async config => {
   const requester = createRequester(config)
   // begin scraping
   await scrape({ database, queuer, requester })
-  logger.info('\ndone downloading memes.')
 }
 
 module.exports = init
