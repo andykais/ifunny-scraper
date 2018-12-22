@@ -1,7 +1,7 @@
-const { homedir } = require('os')
+const { cwd } = require('process')
 const { resolve } = require('path')
 
-module.exports = ({ username, saveFolder = `${homedir()}/ifunny_accounts` }) => ({
+module.exports = ({ username, saveFolder = `${cwd()}/ifunny_accounts` }) => ({
   username,
   baseUrl: 'https://ifunny.co',
   paths: {

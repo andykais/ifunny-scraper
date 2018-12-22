@@ -86,8 +86,10 @@ const parseGrid = async ({ database, queuer, requester }, batchNumber, batchID) 
 
   const batchUrl =
     batchNumber === 0
-      ? new URL(`${baseUrl}/${username}`)
-      : new URL(`${baseUrl}/${username}/timeline/${batchID}?batch=${batchNumber + 2}?mode=grid`)
+      ? new URL(`${baseUrl}/user/${username}`)
+      : new URL(
+          `${baseUrl}/user/${username}/timeline/${batchID}?batch=${batchNumber + 2}?mode=grid`
+        )
 
   const html = await requester({ url: batchUrl, headers: { 'x-requested-with': 'XMLHttpRequest' } })
   const grid$ = cheerio.load(html)
@@ -105,7 +107,7 @@ const parseGrid = async ({ database, queuer, requester }, batchNumber, batchID) 
 
 const parseMetaData = async ({ database, requester }) => {
   const { baseUrl, username } = database.config
-  const url = new URL(`${baseUrl}/${username}`)
+  const url = new URL(`${baseUrl}/user/${username}`)
   const html = await requester({ url })
   // console.log(html)
   const index$ = cheerio.load(html)
