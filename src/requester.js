@@ -1,6 +1,6 @@
 const { createWriteStream, readFile, writeFile } = require('fs')
 const os = require('os')
-const { relative, resolve, extname } = require('path')
+const path = require('path')
 const request = require('request')
 const chalk = require('chalk')
 const { promisify } = require('util')
@@ -30,7 +30,9 @@ const requestPromise = (options = {}) =>
 // request promise with the ability to cache a file
 const cachedRequestPromise = config => async options => {
   const { filename, index, stream, html = true, ...requestOptions } = options
-  const destFilename = filename || `${config.paths.cache}/${sanitizeNameForFilesystem(options.url.toString())}`
+  const destFilename = path.resolve(
+    filename || `${config.paths.cache}/${sanitizeNameForFilesystem(options.url.toString())}`
+  )
 
   if (stream) {
     await new Promise((resolve, reject) => {
@@ -42,7 +44,7 @@ const cachedRequestPromise = config => async options => {
   } else {
     try {
       const cached = await read(destFilename)
-      logger.debug(chalk.green(`accessed saved ${relative(config.paths.basedir, destFilename)}`))
+      logger.debug(chalk.green(`accessed saved ${path.relative(config.paths.basedir, destFilename)}`))
       return cached.toString()
     } catch (e) {
       const blob = await requestPromise(requestOptions)

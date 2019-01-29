@@ -1,7 +1,7 @@
-const { createWriteStream, mkdir } = require('fs')
 const { URL } = require('url')
 const artoo = require('artoo-js')
 const cheerio = require('cheerio')
+const mkdirp = require('./mkdirp')
 const Queuer = require('./queuer-observable')
 const getLoggerSingleton = require('./logger')
 const createDatabase = require('./database')
@@ -11,15 +11,6 @@ const createRequester = require('./requester')
 artoo.bootstrap(cheerio)
 
 const logger = getLoggerSingleton()
-
-// same functionality as mkdir -p
-const mkdirp = (...args) =>
-  new Promise((resolve, reject) =>
-    mkdir(...args, err => {
-      if (err && err.code !== 'EEXIST') reject(err)
-      else resolve()
-    })
-  )
 
 // parse a single page view of a meme, and download the media content
 const parseMeme = async ({ database, queuer, requester }, pageUri) => {

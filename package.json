@@ -1,6 +1,6 @@
 {
   "name": "scrape-ifunny",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "cli scraper for ifunny accounts",
   "main": "index.js",
   "license": "MIT",
