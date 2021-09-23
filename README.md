@@ -1,3 +1,5 @@
+Archive Note: This scraping utility has been supersceded by the generic scraper utility https://github.com/andykais/scrape-pages.
+
 # Ifunny Scraper
 **a cli ifunny profile downloader for offline viewing**
 
